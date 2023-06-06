@@ -1,0 +1,68 @@
+use database DEMO_1;
+
+create or replace table nm_sales_final_data
+(order_id varchar(30) Primary key,
+  order_date date,
+ ship_date date,
+ship_mode Varchar(25),
+customer_name Varchar(50),
+segment varchar(20),
+state Varchar(80),
+country Varchar(80),
+market Varchar(80),
+region Varchar(80),
+product_id Varchar(80),
+category Varchar(80),
+sub_category Varchar(80),
+product_name Varchar(200),
+sales int ,
+quantity int ,
+discount float ,
+profit float,
+shipping_cost float,
+ order_priority Varchar(15),
+ year int );
+ 
+ select * from nm_sales_final_data;
+ 
+ --- set odre_id  primary key
+ 
+ alter table nm_sales_final_data
+ add primary key(order_id);
+
+--convert order_date and ship_date to date data type
+select order_id ,date(order_date) ,date(ship_date),ship_mode ,customer_name ,segment ,state ,country ,market ,region ,product_id ,
+      category ,sub_category ,product_name ,sales  ,quantity  ,discount ,profit ,shipping_cost , order_priority , year 
+        from nm_sales_final_data;
+        
+---case statement- if discount greater than 0 then yes else false 
+
+select order_id ,date(order_date) , date(ship_date),ship_mode ,customer_name ,segment ,state ,country ,market ,region ,product_id ,
+        category ,sub_category ,product_name ,sales  ,quantity  ,discount ,profit ,shipping_cost , order_priority , year  ,
+ case 
+ when discount > 0 then 'yes'
+ else 'false'
+ end
+ as dicount_type
+ from nm_sales_final_data;
+ 
+ 
+ ---count final_profit
+ select order_id ,date(order_date) , date(ship_date),ship_mode ,customer_name ,segment ,state ,country ,market ,region ,product_id ,
+        category ,sub_category ,product_name ,sales  ,quantity  ,discount ,profit ,shipping_cost , order_priority , year  ,
+ quantity*sales as total_sales,
+ total_sales-discount as final _profit
+ from nm_sales_final_data;
+ 
+ ---case statemaent 
+ select order_id ,date(order_date) , date(ship_date),ship_mode ,customer_name ,segment ,state ,country ,market ,region ,product_id ,
+        category ,sub_category ,product_name ,sales  ,quantity  ,discount ,profit ,shipping_cost , order_priority , year  ,
+ DATEDIFF('DAY',date(order_date),date(ship_date)) as Time_period,
+ case 
+ when Time_period <= 3 then 5
+ when Time_period  <=6 AND Time_period >3 then 4
+ when Time_period < 10 AND Time_period > 6 then 3 
+ when Time_period> 10 then 2
+ end as Rating
+ from nm_sales_final_data;
+ 
